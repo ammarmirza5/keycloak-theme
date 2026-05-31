@@ -1,0 +1,273 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Sabthings ID — login theme
+   Neutral corporate look (Microsoft / Okta direction).
+   Inherits structure from keycloak.v2; only overrides what we want.
+───────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Brand */
+  --sb-primary:        #1e3a8a;   /* navy-800 */
+  --sb-primary-hover:  #1e40af;   /* navy-700 */
+  --sb-primary-active: #172554;   /* navy-900 */
+  --sb-accent:         #3b82f6;   /* blue-500 — for links */
+
+  /* Surface */
+  --sb-page-bg:    #f8fafc;       /* slate-50 */
+  --sb-card-bg:    #ffffff;
+  --sb-border:     #e2e8f0;       /* slate-200 */
+  --sb-border-strong: #cbd5e1;    /* slate-300 */
+
+  /* Text */
+  --sb-text:       #0f172a;       /* slate-900 */
+  --sb-muted:      #64748b;       /* slate-500 */
+  --sb-error:      #b91c1c;       /* red-700 */
+
+  /* PatternFly v5 variable overrides — Keycloak v2 uses these for the primary button */
+  --pf-v5-global--primary-color--100:  var(--sb-primary);
+  --pf-v5-global--primary-color--200:  var(--sb-primary-hover);
+  --pf-v5-global--link--Color:         var(--sb-accent);
+  --pf-v5-global--link--Color--hover:  var(--sb-primary-hover);
+  --pf-v5-global--BorderRadius--sm:    8px;
+  --pf-v5-global--BorderRadius--lg:    12px;
+  --pf-v5-global--FontFamily--sans-serif:
+      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ── Page ─────────────────────────────────────────────────────────── */
+
+html, body {
+  background: var(--sb-page-bg);
+  color: var(--sb-text);
+  font-family: var(--pf-v5-global--FontFamily--sans-serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle grid pattern in the background (very faint) */
+body.login-pf-page,
+.login-pf body {
+  background-image:
+    linear-gradient(to bottom, var(--sb-page-bg), #eef2f7),
+    radial-gradient(circle at 20% 0%, rgba(30, 58, 138, 0.04), transparent 40%),
+    radial-gradient(circle at 80% 100%, rgba(59, 130, 246, 0.04), transparent 40%);
+  background-attachment: fixed;
+}
+
+/* ── Header (logo area at the top of the card) ───────────────────── */
+
+#kc-header,
+.login-pf-page-header {
+  margin-bottom: 24px;
+}
+
+#kc-header-wrapper {
+  /* Hide the realm name text — we replace it with our wordmark */
+  font-size: 0;
+  line-height: 0;
+  color: transparent;
+  text-indent: -9999px;
+  height: 64px;
+  background-image: url('../img/logo.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  padding: 0;
+}
+
+/* ── Card ────────────────────────────────────────────────────────── */
+
+.card-pf,
+.login-pf-page .card-pf {
+  background: var(--sb-card-bg);
+  border: 1px solid var(--sb-border);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px rgba(15, 23, 42, 0.06);
+  padding: 36px 32px;
+  max-width: 420px;
+}
+
+/* Title — "Sign in to your account" */
+#kc-page-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--sb-text);
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+/* Subtitle — we inject this via messages_en.properties */
+.subtitle,
+.instruction {
+  color: var(--sb-muted);
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* ── Form fields ─────────────────────────────────────────────────── */
+
+label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sb-text);
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+.pf-v5-c-form-control {
+  width: 100%;
+  height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--sb-border-strong);
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 14px;
+  color: var(--sb-text);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+.pf-v5-c-form-control:focus {
+  outline: none;
+  border-color: var(--sb-primary);
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+}
+
+/* ── Primary button (Sign In) ────────────────────────────────────── */
+
+.pf-v5-c-button.pf-m-primary,
+input[type="submit"].pf-v5-c-button,
+#kc-login {
+  background: var(--sb-primary);
+  border: 1px solid var(--sb-primary);
+  color: #ffffff;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  transition: background-color 120ms ease;
+  width: 100%;
+}
+
+.pf-v5-c-button.pf-m-primary:hover,
+#kc-login:hover {
+  background: var(--sb-primary-hover);
+  border-color: var(--sb-primary-hover);
+}
+
+.pf-v5-c-button.pf-m-primary:active,
+#kc-login:active {
+  background: var(--sb-primary-active);
+}
+
+/* ── Links (Forgot password, Register) ────────────────────────────── */
+
+a, a:visited {
+  color: var(--sb-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover {
+  color: var(--sb-primary-hover);
+  text-decoration: underline;
+}
+
+/* ── "Or sign in with" divider ───────────────────────────────────── */
+
+#kc-social-providers {
+  margin-top: 24px;
+}
+
+#kc-social-providers h2,
+#kc-social-providers > h4 {
+  position: relative;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sb-muted);
+  margin: 24px 0 16px;
+}
+
+#kc-social-providers h2::before,
+#kc-social-providers h2::after,
+#kc-social-providers > h4::before,
+#kc-social-providers > h4::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: var(--sb-border);
+}
+#kc-social-providers h2::before,
+#kc-social-providers > h4::before { left: 0; }
+#kc-social-providers h2::after,
+#kc-social-providers > h4::after  { right: 0; }
+
+/* Social buttons — Google etc. */
+#kc-social-providers ul li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--sb-border-strong);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--sb-text) !important;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+#kc-social-providers ul li a:hover {
+  background: var(--sb-page-bg);
+  border-color: var(--sb-primary);
+  text-decoration: none;
+}
+
+/* ── Error / alert boxes ─────────────────────────────────────────── */
+
+.alert,
+.pf-v5-c-alert {
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.alert-error,
+.pf-v5-c-alert.pf-m-danger {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--sb-error);
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+
+#kc-info,
+.login-pf-page footer,
+.kc-info-wrapper {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--sb-muted);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .card-pf,
+  .login-pf-page .card-pf {
+    margin: 16px;
+    padding: 28px 20px;
+    border-radius: 12px;
+  }
+}
