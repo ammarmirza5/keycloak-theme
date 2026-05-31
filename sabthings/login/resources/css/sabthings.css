@@ -74,11 +74,25 @@ body > div:first-child {
 
 /* Don't double-stack 100vh on nested wrappers (only the outermost needs it) */
 .pf-v5-c-login__container,
-.pf-v5-c-login__main,
 .login-pf-page .login-pf-page-wrapper {
   min-height: auto;
   padding: 0 !important;
 }
+
+/* Inner content wrappers should fill the card, not sit in a narrow column.
+   This is what made the title wrap and the form look squeezed. */
+#kc-content,
+#kc-content-wrapper,
+.pf-v5-c-login__main-body,
+.pf-v5-c-login__main-header,
+.kc-content,
+.login-pf-page .card-pf > * {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+#kc-page-title { white-space: normal; }
 
 /* ── Hide the logo/header — user asked for no logo ────────────────── */
 
@@ -158,11 +172,50 @@ label,
   margin-bottom: 7px;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-.pf-v5-c-form-control,
+/* keycloak.v2 nests the real <input> inside a .pf-v5-c-form-control wrapper.
+   We make the WRAPPER look like the field (border, radius, height) and make
+   the inner <input> a transparent borderless fill — no more nested boxes. */
+
+.pf-v5-c-form-control {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 46px !important;
+  padding: 0 13px !important;
+  border: 1px solid var(--sb-border-strong) !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  box-sizing: border-box;
+  box-shadow: none !important;
+  transition: border-color 130ms ease, box-shadow 130ms ease;
+}
+
+.pf-v5-c-form-control:focus-within {
+  border-color: var(--sb-primary) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18) !important;
+}
+
+/* The actual input INSIDE the wrapper — strip its own chrome */
+.pf-v5-c-form-control > input,
 .pf-v5-c-form-control input {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  font-size: 14.5px !important;
+  color: var(--sb-text) !important;
+}
+
+/* Bare inputs NOT wrapped in .pf-v5-c-form-control (older templates) */
+input[type="text"]:not(.pf-v5-c-form-control input),
+input[type="email"]:not(.pf-v5-c-form-control input),
+input[type="password"]:not(.pf-v5-c-form-control input) {
   width: 100% !important;
   height: 46px !important;
   padding: 11px 13px !important;
@@ -173,48 +226,62 @@ input[type="password"],
   color: var(--sb-text) !important;
   box-sizing: border-box;
   box-shadow: none !important;
+  outline: none !important;
   transition: border-color 130ms ease, box-shadow 130ms ease;
 }
-
-input::placeholder { color: #94a3b8; }
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-.pf-v5-c-form-control:focus,
-.pf-v5-c-form-control:focus-within {
-  outline: none !important;
+input[type="text"]:not(.pf-v5-c-form-control input):focus,
+input[type="email"]:not(.pf-v5-c-form-control input):focus,
+input[type="password"]:not(.pf-v5-c-form-control input):focus {
   border-color: var(--sb-primary) !important;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18) !important;
 }
 
-/* Password field + reveal-eye grouped cleanly */
+input::placeholder { color: #94a3b8; opacity: 1; }
+
+/* Password field + reveal-eye: the input-group IS the bordered field;
+   input and eye button sit inside it borderless. */
 .pf-v5-c-input-group {
   display: flex !important;
-  align-items: stretch;
-  border: 1px solid var(--sb-border-strong);
-  border-radius: 10px;
+  align-items: center !important;
+  width: 100% !important;
+  height: 46px !important;
+  border: 1px solid var(--sb-border-strong) !important;
+  border-radius: 10px !important;
   overflow: hidden;
-  background: #fff;
+  background: #fff !important;
+  box-shadow: none !important;
   transition: border-color 130ms ease, box-shadow 130ms ease;
 }
 .pf-v5-c-input-group:focus-within {
-  border-color: var(--sb-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+  border-color: var(--sb-primary) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18) !important;
+}
+/* a .pf-v5-c-form-control may sit INSIDE the input-group — flatten it */
+.pf-v5-c-input-group .pf-v5-c-form-control {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  padding: 0 13px !important;
 }
 .pf-v5-c-input-group input {
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
+  outline: none !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
 }
-.pf-v5-c-input-group:focus-within input { box-shadow: none !important; }
 .pf-v5-c-input-group .pf-v5-c-button,
 .pf-v5-c-input-group button {
   border: 0 !important;
   background: transparent !important;
   padding: 0 14px !important;
+  height: 100% !important;
   color: var(--sb-muted) !important;
   cursor: pointer;
+  flex: 0 0 auto;
 }
 
 /* ── Options row (Keep me signed in / Forgot password) ────────────── */
@@ -223,9 +290,12 @@ input[type="password"]:focus,
   display: flex !important;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   margin: 2px 0 22px;
+  flex-wrap: nowrap;
 }
+
+#kc-form-options > div { min-width: 0; }
 
 .checkbox label,
 .pf-v5-c-check__label {
@@ -236,9 +306,14 @@ input[type="password"]:focus,
   gap: 8px;
   cursor: pointer;
   margin: 0;
+  white-space: nowrap;
 }
 
-#kc-form-options a { font-size: 13px; }
+#kc-form-options a,
+#kc-form-options .pf-v5-c-button--link {
+  font-size: 13px;
+  white-space: nowrap;
+}
 
 /* ── Primary button (Continue) ────────────────────────────────────── */
 
