@@ -1,113 +1,133 @@
 /* ─────────────────────────────────────────────────────────────────────
    Sabthings ID — login theme
-   Neutral corporate look (Microsoft / Okta direction).
-   Inherits structure from keycloak.v2; only overrides what we want.
+   Targets Keycloak 26 / keycloak.v2 (PatternFly v5 + custom kc-* layout).
 ───────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Brand */
-  --sb-primary:        #1e3a8a;   /* navy-800 */
-  --sb-primary-hover:  #1e40af;   /* navy-700 */
-  --sb-primary-active: #172554;   /* navy-900 */
-  --sb-accent:         #3b82f6;   /* blue-500 — for links */
+  --sb-primary:        #1e3a8a;
+  --sb-primary-hover:  #1e40af;
+  --sb-primary-active: #172554;
+  --sb-accent:         #3b82f6;
 
-  /* Surface */
-  --sb-page-bg:    #f8fafc;       /* slate-50 */
+  --sb-page-bg:    #f8fafc;
   --sb-card-bg:    #ffffff;
-  --sb-border:     #e2e8f0;       /* slate-200 */
-  --sb-border-strong: #cbd5e1;    /* slate-300 */
+  --sb-border:     #e2e8f0;
+  --sb-border-strong: #cbd5e1;
 
-  /* Text */
-  --sb-text:       #0f172a;       /* slate-900 */
-  --sb-muted:      #64748b;       /* slate-500 */
-  --sb-error:      #b91c1c;       /* red-700 */
+  --sb-text:    #0f172a;
+  --sb-muted:   #64748b;
+  --sb-error:   #b91c1c;
 
-  /* PatternFly v5 variable overrides — Keycloak v2 uses these for the primary button */
-  --pf-v5-global--primary-color--100:  var(--sb-primary);
-  --pf-v5-global--primary-color--200:  var(--sb-primary-hover);
-  --pf-v5-global--link--Color:         var(--sb-accent);
-  --pf-v5-global--link--Color--hover:  var(--sb-primary-hover);
-  --pf-v5-global--BorderRadius--sm:    8px;
-  --pf-v5-global--BorderRadius--lg:    12px;
+  --sb-radius:  12px;
+
+  --pf-v5-global--primary-color--100: var(--sb-primary);
+  --pf-v5-global--primary-color--200: var(--sb-primary-hover);
+  --pf-v5-global--link--Color:        var(--sb-accent);
+  --pf-v5-global--link--Color--hover: var(--sb-primary-hover);
   --pf-v5-global--FontFamily--sans-serif:
       "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ── Page ─────────────────────────────────────────────────────────── */
+/* ── Page / body ─────────────────────────────────────────────────── */
 
 html, body {
   background: var(--sb-page-bg);
   color: var(--sb-text);
   font-family: var(--pf-v5-global--FontFamily--sans-serif);
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
-/* Subtle grid pattern in the background (very faint) */
-body.login-pf-page,
-.login-pf body {
-  background-image:
-    linear-gradient(to bottom, var(--sb-page-bg), #eef2f7),
-    radial-gradient(circle at 20% 0%, rgba(30, 58, 138, 0.04), transparent 40%),
-    radial-gradient(circle at 80% 100%, rgba(59, 130, 246, 0.04), transparent 40%);
-  background-attachment: fixed;
+/* ── Top-level layout: Keycloak 26 wraps everything in .kc-page-fixed-width-fluid
+   which is a flex container that we want to center on the screen. ── */
+
+.kcBodyClass,
+.login-pf,
+.login-pf-page,
+.kc-page-fixed-width-fluid {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 24px;
+  box-sizing: border-box;
 }
 
-/* ── Header (logo area at the top of the card) ───────────────────── */
+/* ── The card (.kc-page-default-content / .login-pf-page .card-pf) ── */
 
-#kc-header,
-.login-pf-page-header {
-  margin-bottom: 24px;
-}
-
-#kc-header-wrapper {
-  /* Hide the realm name text — we replace it with our wordmark */
-  font-size: 0;
-  line-height: 0;
-  color: transparent;
-  text-indent: -9999px;
-  height: 64px;
-  background-image: url('../img/logo.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  padding: 0;
-}
-
-/* ── Card ────────────────────────────────────────────────────────── */
-
-.card-pf,
-.login-pf-page .card-pf {
+.kc-page-default-content,
+.login-pf-page .card-pf,
+div[class*="kcLoginClass"] {
   background: var(--sb-card-bg);
   border: 1px solid var(--sb-border);
-  border-radius: 16px;
+  border-radius: var(--sb-radius);
   box-shadow:
     0 1px 2px rgba(15, 23, 42, 0.04),
     0 8px 24px rgba(15, 23, 42, 0.06);
   padding: 36px 32px;
-  max-width: 420px;
+  width: 100%;
+  max-width: 440px;
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 
-/* Title — "Sign in to your account" */
-#kc-page-title {
+/* ── Logo / header inside the card ──────────────────────────────── */
+
+#kc-header,
+.login-pf-page-header,
+header.kc-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 24px;
+  padding: 0;
+}
+
+#kc-header-wrapper {
+  /* Hide the realm name text — replace with our wordmark */
+  font-size: 0 !important;
+  line-height: 0 !important;
+  color: transparent !important;
+  text-indent: -9999px;
+  height: 56px;
+  width: 100%;
+  max-width: 280px;
+  background-image: url('../img/logo.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* ── Page title ─────────────────────────────────────────────────── */
+
+#kc-page-title,
+h1#kc-page-title {
   font-size: 22px;
   font-weight: 600;
   color: var(--sb-text);
-  margin-bottom: 4px;
+  margin: 0 0 24px;
   text-align: center;
+  line-height: 1.3;
 }
 
-/* Subtitle — we inject this via messages_en.properties */
-.subtitle,
-.instruction {
-  color: var(--sb-muted);
-  font-size: 14px;
-  text-align: center;
-  margin-bottom: 24px;
+/* ── Form ───────────────────────────────────────────────────────── */
+
+#kc-form {
+  margin-top: 0;
 }
 
-/* ── Form fields ─────────────────────────────────────────────────── */
+.pf-v5-c-form__group,
+.form-group {
+  margin-bottom: 16px;
+}
 
-label {
+label,
+.pf-v5-c-form__label {
+  display: block;
   font-size: 13px;
   font-weight: 500;
   color: var(--sb-text);
@@ -117,56 +137,110 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-.pf-v5-c-form-control {
-  width: 100%;
-  height: 44px;
-  padding: 10px 12px;
-  border: 1px solid var(--sb-border-strong);
-  border-radius: 8px;
-  background: #ffffff;
-  font-size: 14px;
-  color: var(--sb-text);
+.pf-v5-c-form-control,
+.pf-v5-c-form-control input {
+  width: 100% !important;
+  height: 44px !important;
+  padding: 10px 12px !important;
+  border: 1px solid var(--sb-border-strong) !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  font-size: 14px !important;
+  color: var(--sb-text) !important;
+  box-sizing: border-box;
+  box-shadow: none !important;
   transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
-.pf-v5-c-form-control:focus {
-  outline: none;
-  border-color: var(--sb-primary);
-  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+.pf-v5-c-form-control:focus,
+.pf-v5-c-form-control:focus-within {
+  outline: none !important;
+  border-color: var(--sb-primary) !important;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15) !important;
 }
 
-/* ── Primary button (Sign In) ────────────────────────────────────── */
+/* Password reveal button — keep it inside the input */
+.pf-v5-c-input-group {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--sb-border-strong);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+.pf-v5-c-input-group input {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.pf-v5-c-input-group button {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 12px !important;
+  color: var(--sb-muted) !important;
+}
+
+/* ── Checkbox (Remember me) ─────────────────────────────────────── */
+
+.checkbox label,
+.pf-v5-c-check__label {
+  font-size: 13px;
+  color: var(--sb-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+#kc-form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 4px 0 16px;
+}
+
+/* ── Primary button (Sign In / Continue) ─────────────────────────── */
+
+#kc-form-buttons {
+  margin-top: 16px;
+}
 
 .pf-v5-c-button.pf-m-primary,
 input[type="submit"].pf-v5-c-button,
-#kc-login {
-  background: var(--sb-primary);
-  border: 1px solid var(--sb-primary);
-  color: #ffffff;
-  height: 44px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 14px;
+input[type="submit"].btn-primary,
+#kc-login,
+.kc-login-button {
+  display: block !important;
+  width: 100% !important;
+  height: 44px !important;
+  background: var(--sb-primary) !important;
+  border: 1px solid var(--sb-primary) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
   letter-spacing: 0.01em;
+  cursor: pointer;
   transition: background-color 120ms ease;
-  width: 100%;
 }
 
 .pf-v5-c-button.pf-m-primary:hover,
+input[type="submit"]:hover,
 #kc-login:hover {
-  background: var(--sb-primary-hover);
-  border-color: var(--sb-primary-hover);
+  background: var(--sb-primary-hover) !important;
+  border-color: var(--sb-primary-hover) !important;
 }
 
 .pf-v5-c-button.pf-m-primary:active,
+input[type="submit"]:active,
 #kc-login:active {
-  background: var(--sb-primary-active);
+  background: var(--sb-primary-active) !important;
 }
 
-/* ── Links (Forgot password, Register) ────────────────────────────── */
+/* ── Links ──────────────────────────────────────────────────────── */
 
 a, a:visited {
   color: var(--sb-accent);
@@ -178,14 +252,12 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ── "Or sign in with" divider ───────────────────────────────────── */
+/* ── Social providers — the broken part in your screenshot ──────── */
 
-#kc-social-providers {
-  margin-top: 24px;
-}
-
-#kc-social-providers h2,
-#kc-social-providers > h4 {
+/* "Or continue with" divider */
+#kc-social-providers > h2,
+#kc-social-providers > h4,
+#kc-social-providers > p {
   position: relative;
   text-align: center;
   font-size: 12px;
@@ -194,47 +266,89 @@ a:hover {
   letter-spacing: 0.08em;
   color: var(--sb-muted);
   margin: 24px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-
-#kc-social-providers h2::before,
-#kc-social-providers h2::after,
+#kc-social-providers > h2::before,
+#kc-social-providers > h2::after,
 #kc-social-providers > h4::before,
-#kc-social-providers > h4::after {
+#kc-social-providers > h4::after,
+#kc-social-providers > p::before,
+#kc-social-providers > p::after {
   content: "";
-  position: absolute;
-  top: 50%;
-  width: 30%;
+  flex: 1;
   height: 1px;
   background: var(--sb-border);
 }
-#kc-social-providers h2::before,
-#kc-social-providers > h4::before { left: 0; }
-#kc-social-providers h2::after,
-#kc-social-providers > h4::after  { right: 0; }
 
-/* Social buttons — Google etc. */
-#kc-social-providers ul li a {
+/* Social buttons list */
+#kc-social-providers ul,
+#kc-social-providers .kc-social-providers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  height: 44px;
-  border: 1px solid var(--sb-border-strong);
-  border-radius: 8px;
-  background: #ffffff;
-  color: var(--sb-text) !important;
-  font-weight: 500;
-  font-size: 14px;
-  transition: background-color 120ms ease, border-color 120ms ease;
-}
-#kc-social-providers ul li a:hover {
-  background: var(--sb-page-bg);
-  border-color: var(--sb-primary);
-  text-decoration: none;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* ── Error / alert boxes ─────────────────────────────────────────── */
+#kc-social-providers li {
+  margin: 0;
+  width: 100%;
+}
+
+#kc-social-providers a,
+#kc-social-providers .pf-v5-c-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  height: 44px !important;
+  padding: 0 16px !important;
+  border: 1px solid var(--sb-border-strong) !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: var(--sb-text) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+  transition: background-color 120ms ease, border-color 120ms ease;
+  box-sizing: border-box;
+}
+
+#kc-social-providers a:hover {
+  background: var(--sb-page-bg) !important;
+  border-color: var(--sb-primary) !important;
+  text-decoration: none !important;
+}
+
+/* The CRITICAL fix: clamp social icons (Google G logo etc) to a sane size.
+   Keycloak v2 doesn't size these, so they render at intrinsic SVG dimensions. */
+#kc-social-providers a > i,
+#kc-social-providers a > svg,
+#kc-social-providers a > img,
+#kc-social-providers .kc-social-icon,
+#kc-social-providers .pf-v5-c-button > i,
+#kc-social-providers .pf-v5-c-button > svg,
+#kc-social-providers .pf-v5-c-button > img {
+  width: 18px !important;
+  height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Hide Keycloak's text-name on the icon if it duplicates the label */
+#kc-social-providers .kc-social-provider-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ── Alerts ─────────────────────────────────────────────────────── */
 
 .alert,
 .pf-v5-c-alert {
@@ -243,15 +357,26 @@ a:hover {
   padding: 12px 14px;
   margin-bottom: 16px;
 }
-
 .alert-error,
 .pf-v5-c-alert.pf-m-danger {
   background: #fef2f2;
   border: 1px solid #fecaca;
   color: var(--sb-error);
 }
+.alert-warning,
+.pf-v5-c-alert.pf-m-warning {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+.alert-success,
+.pf-v5-c-alert.pf-m-success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
 
-/* ── Footer ──────────────────────────────────────────────────────── */
+/* ── Footer ─────────────────────────────────────────────────────── */
 
 #kc-info,
 .login-pf-page footer,
@@ -262,12 +387,19 @@ a:hover {
   color: var(--sb-muted);
 }
 
-/* Mobile */
+/* ── Mobile ─────────────────────────────────────────────────────── */
+
 @media (max-width: 480px) {
-  .card-pf,
+  .kc-page-default-content,
   .login-pf-page .card-pf {
-    margin: 16px;
     padding: 28px 20px;
-    border-radius: 12px;
+    border-radius: 10px;
+  }
+  #kc-header-wrapper {
+    height: 48px;
+    max-width: 240px;
+  }
+  #kc-page-title {
+    font-size: 20px;
   }
 }
